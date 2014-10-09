@@ -2,9 +2,26 @@
 "use strict";
 var clock=document.getElementById("clock");
 var sec=0, min=0, hour=0;
-var tiles = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15];
-
-
+var tiles = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, " "];
+var gameBoard = document.getElementById("gameBoard");
+function buildGameBoard(gameBoard, tileSpaces) {
+    var row;
+    var cell;
+    var x, y;
+    var listElement = 0;
+    var text;
+    for(x = 0; x < 4; x++) {
+        row = document.createElement("tr");
+        for(y = 0; y < 4; y++) {
+            cell = document.createElement("td"); 
+            text = document.createTextNode(tileSpaces[listElement])
+            cell.appendChild(text);
+            listElement++;
+            row.appendChild(cell);
+        }
+        gameBoard.appendChild(row);
+    }
+}
 
 function tick() {
     sec++;
@@ -77,4 +94,5 @@ function shuffle(list) {
     return list;
 }
 tiles = shuffle(tiles);
+buildGameBoard(gameBoard, tiles);
 //alert(tiles);
