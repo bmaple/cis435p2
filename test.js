@@ -4,6 +4,8 @@ var clock=document.getElementById("clock");
 var sec=0, min=0, hour=0;
 var tiles = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, " "];
 var gameBoard = document.getElementById("gameBoard");
+
+//to check adj spaces on board check adj nodes and children of adj parents in same space as one to be checked
 function buildGameBoard(gameBoard, tileSpaces) {
     var row;
     var cell;
@@ -14,13 +16,24 @@ function buildGameBoard(gameBoard, tileSpaces) {
         row = document.createElement("tr");
         for(y = 0; y < 4; y++) {
             cell = document.createElement("td"); 
-            text = document.createTextNode(tileSpaces[listElement])
+            text = document.createTextNode(tileSpaces[listElement]);
             cell.appendChild(text);
             listElement++;
             row.appendChild(cell);
         }
         gameBoard.appendChild(row);
     }
+}
+function checkAdj(gameBoard)
+{
+
+alert(document.getElementById("gameBoard").rows[1].cells.item(1).innerHTML);//get inside of second cell of row 1
+//alert(document.getElementById("gameBoard").rows[1].cells.item(1).cellIndex);//get index of cell
+
+alert(document.getElementById("gameBoard").rows[0].cells.item(0).previousSibling.innerHTML) // check left WON'T WORK IF IT DOESN'T EXIST
+alert(document.getElementById("gameBoard").rows[1].cells.item(1).nextSibling.innerHTML) //check right
+alert(document.getElementById("gameBoard").rows[1].cells.item(1).parentNode.nextSibling.cells.item(1).innerHTML); // check down
+alert(document.getElementById("gameBoard").rows[1].cells.item(1).parentNode.previousSibling.cells.item(1).innerHTML);// check up
 }
 
 function tick() {
@@ -95,4 +108,7 @@ function shuffle(list) {
 }
 tiles = shuffle(tiles);
 buildGameBoard(gameBoard, tiles);
-//alert(tiles);
+//alert(document.getElementById("gameBoard").rows[0].cells.length);//get num cols
+//alert(document.getElementById("gameBoard").rows[2].cells.item(1).innerHTML);//get inside of second cell of row 1
+//alert(document.getElementById("gameBoard").rows[2].cells.item(1).cellIndex);//get index of cell
+checkAdj(gameBoard);

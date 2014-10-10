@@ -25,6 +25,10 @@
     .sym {
         float: right;
     }
+    table
+    {
+        border-collapse: collapse;
+    }
     div.mainContent table th, div.mainContent table td {
         padding: .5em;
     }
