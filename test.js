@@ -2,16 +2,15 @@
 "use strict";
 var clock=document.getElementById("clock");
 var sec=0, min=0, hour=0;
-var tiles = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, " "];
+var tiles = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, " ", 15];
 var gameBoard = document.getElementById("gameBoard");
 
 //to check adj spaces on board check adj nodes and children of adj parents in same space as one to be checked
 function buildGameBoard(gameBoard, tileSpaces) {
-    var row;
-    var cell;
-    var x, y;
-    var listElement = 0;
-    var text;
+    var row, cell,
+    x, y,
+    listElement = 0,
+    text;
     for(x = 0; x < 4; x++) {
         row = document.createElement("tr");
         for(y = 0; y < 4; y++) {
@@ -26,29 +25,78 @@ function buildGameBoard(gameBoard, tileSpaces) {
     }
 }
 function checkAdj(tableCell) {
-    var colNum = tableCell.cellIndex;
-    var parNode = tableCell.parentNode;
-    var numNodes = parNode.cells.length;
-    function swap(a, b)
-    {
+    var colNum = tableCell.cellIndex,
+        parNode = tableCell.parentNode,
+        numNodes = parNode.cells.length;
+    function swap(a, b) {
         var temp = a.innerHTML;
         a.innerHTML = b.innerHTML;
         b.innerHTML = temp;
+    }//change to not null later maybe
+    function checkWin() {
+        var curBoardState;
+        function gatherCells()
+        {
+            var i, x,
+            curState = new Array();
+            for(i = 0; i < gameBoard.childNodes.length; i++) {
+                for(x = 0; x < gameBoard.childNodes[i].childNodes.length; x++) {
+                    curState.push(gameBoard.childNodes[i].childNodes[x].innerHTML);
+                }
+            }
+            return curState;
+        }
+        curBoardState = gatherCells();
+        function iterateThrough(startPos, curBoardState){
+            var win = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15],
+            i;
+            for(i = 0; i < win.length; i++) {
+                if(win[i] != curBoardState[startPos]){
+                    return false;
+                }
+                startPos++; 
+            }
+            return true;
+        }
+        function youWin(){
+            alert("you win!");
+        }
+
+        if(curBoardState[0] === " ") {
+            if(iterateThrough(1, curBoardState)) {
+            alert("you win!");
+                return true;
+            }
+        }
+        else if(curBoardState[curBoardState.length -1] === " ") {
+            if(iterateThrough(0, curBoardState)) {
+            alert("you win!");
+                return true;
+            }
+        }
+        else{
+            return false;
+        }
+        return;
     }
     if(tableCell.cellIndex >= 1 && tableCell.previousSibling.innerHTML === " ") {
         swap(tableCell, tableCell.previousSibling);
+        checkWin();
         return;
     }
     if(tableCell.cellIndex < numNodes - 1 && tableCell.nextSibling.innerHTML === " ") {
         swap(tableCell, tableCell.nextSibling);
+        checkWin();
         return;
     }
     if(parNode.previousSibling !== null && parNode.previousSibling.childNodes[colNum].innerHTML === " ") {
         swap(tableCell, parNode.previousSibling.childNodes[colNum]);
+        checkWin();
         return;
     }
     if(parNode.nextSibling !== null && parNode.nextSibling.childNodes[colNum].innerHTML === " ") {
         swap(tableCell, parNode.nextSibling.childNodes[colNum]);
+        checkWin();
         return;
     }
 }
