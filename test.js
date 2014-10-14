@@ -16,6 +16,7 @@ function buildGameBoard(gameBoard, tileSpaces) {
         row = document.createElement("tr");
         for(y = 0; y < 4; y++) {
             cell = document.createElement("td"); 
+            cell.setAttribute("onclick", "checkAdj(this)");
             text = document.createTextNode(tileSpaces[listElement]);
             cell.appendChild(text);
             listElement++;
@@ -24,22 +25,33 @@ function buildGameBoard(gameBoard, tileSpaces) {
         gameBoard.appendChild(row);
     }
 }
-function checkAdj() {
-    var node = document.getElementById("gameBoard").rows[0].cells.item(0); 
-    var numNodes = document.getElementById("gameBoard").rows[1].cells.length;
-    var colNum = node.cellIndex;
-    var parNode = node.parentNode;
-    
-    if(node.cellIndex >= 1)
-        alert(node.previousSibling.innerHTML); //left
-    if(node.cellIndex < numNodes - 1)
-        alert(node.nextSibling.innerHTML); //right
-    if(parNode.previousSibling !== null)
-        alert(parNode.previousSibling.childNodes[colNum].innerHTML); //up
-    if(parNode.nextSibling !== null)
-        alert(parNode.nextSibling.childNodes[colNum].innerHTML); //down
+function checkAdj(tableCell) {
+    var colNum = tableCell.cellIndex;
+    var parNode = tableCell.parentNode;
+    var numNodes = parNode.cells.length;
+    function swap(a, b)
+    {
+        var temp = a.innerHTML;
+        a.innerHTML = b.innerHTML;
+        b.innerHTML = temp;
+    }
+    if(tableCell.cellIndex >= 1 && tableCell.previousSibling.innerHTML === " ") {
+        swap(tableCell, tableCell.previousSibling);
+        return;
+    }
+    if(tableCell.cellIndex < numNodes - 1 && tableCell.nextSibling.innerHTML === " ") {
+        swap(tableCell, tableCell.nextSibling);
+        return;
+    }
+    if(parNode.previousSibling !== null && parNode.previousSibling.childNodes[colNum].innerHTML === " ") {
+        swap(tableCell, parNode.previousSibling.childNodes[colNum]);
+        return;
+    }
+    if(parNode.nextSibling !== null && parNode.nextSibling.childNodes[colNum].innerHTML === " ") {
+        swap(tableCell, parNode.nextSibling.childNodes[colNum]);
+        return;
+    }
 }
-
 function tick() {
     sec++;
     if(sec >= 60) {
@@ -115,4 +127,4 @@ buildGameBoard(gameBoard, tiles);
 //alert(document.getElementById("gameBoard").rows[0].cells.length);//get num cols
 //alert(document.getElementById("gameBoard").rows[2].cells.item(1).innerHTML);//get inside of second cell of row 1
 //alert(document.getElementById("gameBoard").rows[2].cells.item(1).cellIndex);//get index of cell
-checkAdj();
+//checkAdj();
