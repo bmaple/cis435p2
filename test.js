@@ -3,14 +3,59 @@
 var clock=document.getElementById("clock");
 var sec=0, min=0, hour=0;
 var tiles = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, " ", 15];
+var easyTiles = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, " ", 15];
 var gameBoard = document.getElementById("gameBoard");
 
+function shuffle(list) {
+    var i, randInt;
+    function getRandInt(min, max) {
+        return Math.floor(Math.random() * (max - min)) + min;
+    }
+    Array.prototype.swap = function (a, b) {   
+        var temp = this[a];
+        this[a] = this[b];
+        this[b] = temp;
+        return this;
+    }
+    for (i = list.length - 1; i >= 1; i--) {
+        randInt = getRandInt(0, i);
+        list.swap(randInt, i);
+    }
+    return list;
+}
 //to check adj spaces on board check adj nodes and children of adj parents in same space as one to be checked
+function newGame()
+{
+    gameBoard.removeChild(gameBoard.firstChild);
+    tiles = shuffle(tiles);
+    buildGameBoard(gameBoard, tiles);
+}
+function easyGame()
+{
+    gameBoard.removeChild(gameBoard.firstChild);
+    tiles = easyTiles.slice(0);
+    buildGameBoard(gameBoard, tiles);
+}
+function optionsButtons()
+{
+    var content = document.getElementById("foreground");
+    var startAgain = document.createElement("p"),
+        simpleGame = document.createElement("p"),
+        again = document.createTextNode("Start Over"),
+        easy = document.createTextNode("Easy Mode");
+
+    startAgain.setAttribute("onclick", "newGame()");
+    simpleGame.setAttribute("onclick", "easyGame()");
+    startAgain.appendChild(again);
+    simpleGame.appendChild(easy);
+    content.appendChild(startAgain);
+    content.appendChild(simpleGame);
+}
 function buildGameBoard(gameBoard, tileSpaces) {
     var row, cell, tbody,
-    x, y,
-    listElement = 0,
-    text;
+        x, y,
+        listElement = 0,
+        text;
     tbody = document.createElement("tbody");
     for(x = 0; x < 4; x++) {
         row = document.createElement("tr");
@@ -40,7 +85,7 @@ function checkAdj(tableCell) {
         function gatherCells()
         {
             var i, x,
-            curState = new Array();
+                curState = new Array();
             for(i = 0; i < gameBoard.firstChild.childNodes.length; i++) {
                 for(x = 0; x < gameBoard.firstChild.childNodes[i].childNodes.length; x++) {
                     curState.push(gameBoard.firstChild.childNodes[i].childNodes[x].innerHTML);
@@ -51,7 +96,7 @@ function checkAdj(tableCell) {
         curBoardState = gatherCells();
         function iterateThrough(startPos, curBoardState){
             var win = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15],
-            i;
+                i;
             for(i = 0; i < win.length; i++) {
                 if(win[i] != curBoardState[startPos]){
                     return false;
@@ -65,9 +110,7 @@ function checkAdj(tableCell) {
             //prompt
             var again = confirm("Do you want to play again?");
             if(again) {
-            gameBoard.removeChild(gameBoard.firstChild);
-            tiles = shuffle(tiles);
-            buildGameBoard(gameBoard, tiles);
+                newGame();
             }
         }
 
@@ -161,26 +204,11 @@ function tick() {
 function repeat() {
     setTimeout(tick, 1000);
 }
-function shuffle(list) {
-    var i, randInt;
-    function getRandInt(min, max) {
-        return Math.floor(Math.random() * (max - min)) + min;
-    }
-    Array.prototype.swap = function (a, b) {   
-        var temp = this[a];
-        this[a] = this[b];
-        this[b] = temp;
-        return this;
-    }
-    for (i = list.length - 1; i >= 1; i--) {
-        randInt = getRandInt(0, i);
-        list.swap(randInt, i);
-    }
-    return list;
-}
+
 //repeat();
 //tiles = shuffle(tiles);
 buildGameBoard(gameBoard, tiles);
+optionsButtons();
 //alert(document.getElementById("gameBoard").rows[0].cells.length);//get num cols
 //alert(document.getElementById("gameBoard").rows[2].cells.item(1).innerHTML);//get inside of second cell of row 1
 //alert(document.getElementById("gameBoard").rows[2].cells.item(1).cellIndex);//get index of cell
