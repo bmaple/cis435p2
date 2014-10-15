@@ -7,10 +7,11 @@ var gameBoard = document.getElementById("gameBoard");
 
 //to check adj spaces on board check adj nodes and children of adj parents in same space as one to be checked
 function buildGameBoard(gameBoard, tileSpaces) {
-    var row, cell,
+    var row, cell, tbody,
     x, y,
     listElement = 0,
     text;
+    tbody = document.createElement("tbody");
     for(x = 0; x < 4; x++) {
         row = document.createElement("tr");
         for(y = 0; y < 4; y++) {
@@ -21,8 +22,9 @@ function buildGameBoard(gameBoard, tileSpaces) {
             listElement++;
             row.appendChild(cell);
         }
-        gameBoard.appendChild(row);
+        tbody.appendChild(row);
     }
+    gameBoard.appendChild(tbody);
 }
 function checkAdj(tableCell) {
     var colNum = tableCell.cellIndex,
@@ -39,9 +41,9 @@ function checkAdj(tableCell) {
         {
             var i, x,
             curState = new Array();
-            for(i = 0; i < gameBoard.childNodes.length; i++) {
-                for(x = 0; x < gameBoard.childNodes[i].childNodes.length; x++) {
-                    curState.push(gameBoard.childNodes[i].childNodes[x].innerHTML);
+            for(i = 0; i < gameBoard.firstChild.childNodes.length; i++) {
+                for(x = 0; x < gameBoard.firstChild.childNodes[i].childNodes.length; x++) {
+                    curState.push(gameBoard.firstChild.childNodes[i].childNodes[x].innerHTML);
                 }
             }
             return curState;
@@ -60,17 +62,24 @@ function checkAdj(tableCell) {
         }
         function youWin(){
             alert("you win!");
+            //prompt
+            var again = confirm("Do you want to play again?");
+            if(again) {
+            gameBoard.removeChild(gameBoard.firstChild);
+            tiles = shuffle(tiles);
+            buildGameBoard(gameBoard, tiles);
+            }
         }
 
         if(curBoardState[0] === " ") {
             if(iterateThrough(1, curBoardState)) {
-            alert("you win!");
+                youWin();
                 return true;
             }
         }
         else if(curBoardState[curBoardState.length -1] === " ") {
             if(iterateThrough(0, curBoardState)) {
-            alert("you win!");
+                youWin();
                 return true;
             }
         }
