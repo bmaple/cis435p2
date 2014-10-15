@@ -1,10 +1,12 @@
 /*jslint browser: true, ass: true, plusplus: true, white: true */
 "use strict";
 var clock=document.getElementById("clock");
-var sec=0, min=0, hour=0;
-var tiles = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, " ", 15];
+var counter=document.getElementById("moves");
 var easyTiles = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, " ", 15];
+var tiles = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, " ", 15];
 var gameBoard = document.getElementById("gameBoard");
+var move = 0;
+var newMove = document.createTextNode(move);
 
 function shuffle(list) {
     var i, randInt;
@@ -26,12 +28,20 @@ function shuffle(list) {
 //to check adj spaces on board check adj nodes and children of adj parents in same space as one to be checked
 function newGame()
 {
+    move = 0;
+    newMove = document.createTextNode(move);
+    counter.removeChild(counter.firstChild);
+    counter.appendChild(newMove);
     gameBoard.removeChild(gameBoard.firstChild);
     tiles = shuffle(tiles);
     buildGameBoard(gameBoard, tiles);
 }
 function easyGame()
 {
+    move = 0;
+    newMove = document.createTextNode(move);
+    counter.removeChild(counter.firstChild);
+    counter.appendChild(newMove);
     gameBoard.removeChild(gameBoard.firstChild);
     tiles = easyTiles.slice(0);
     buildGameBoard(gameBoard, tiles);
@@ -71,11 +81,19 @@ function buildGameBoard(gameBoard, tileSpaces) {
     }
     gameBoard.appendChild(tbody);
 }
+function anotherMove()
+{
+    move++;
+    newMove = document.createTextNode(move);
+    counter.removeChild(counter.firstChild);
+    counter.appendChild(newMove);
+}
 function checkAdj(tableCell) {
     var colNum = tableCell.cellIndex,
         parNode = tableCell.parentNode,
         numNodes = parNode.cells.length;
     function swap(a, b) {
+        anotherMove();
         var temp = a.innerHTML;
         a.innerHTML = b.innerHTML;
         b.innerHTML = temp;
@@ -209,6 +227,7 @@ function repeat() {
 //tiles = shuffle(tiles);
 buildGameBoard(gameBoard, tiles);
 optionsButtons();
+counter.appendChild(newMove);
 //alert(document.getElementById("gameBoard").rows[0].cells.length);//get num cols
 //alert(document.getElementById("gameBoard").rows[2].cells.item(1).innerHTML);//get inside of second cell of row 1
 //alert(document.getElementById("gameBoard").rows[2].cells.item(1).cellIndex);//get index of cell
